@@ -4,8 +4,10 @@ def main():
     book_path = "books/frankenstein.txt"
     text = get_book_text(book_path)
     num_words = get_num_words(text)
-    chars_dict = get_chars_dict(text)
-    print(chars_dict)
+    chars_list = get_chars_list(text)
+    chars_list.sort(reverse=True, key=sort_on)
+
+    print_report(book_path, num_words, chars_list)
 
 def get_book_text(path):
     with open(path) as f:
@@ -15,11 +17,22 @@ def get_num_words(text):
     words = text.split()
     return len(words)
 
-def get_chars_dict(text):
-    chars = {}
+def get_chars_list(text):
+    chars = []
     text = text.lower()
     for char in alc:
-        chars[char] = text.count(char)
+        chars.append({"char": char, "num": text.count(char)})
     return chars
+
+def sort_on(dict):
+    return dict["num"]
+
+def print_report(book, word_count, chars_list):
+    print(f"--- Begin report of {book} ---")
+    print(f"{word_count} words found in the book")
+    print("")
+    for char in chars_list:
+        print(f"The '{char["char"]}' character was found {char["num"]} times")
+    print("--- End report ---")
 
 main()
